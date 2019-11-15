@@ -1,6 +1,7 @@
 package sorting;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class QuickSort {
 	public static void main(String[] args) {
@@ -13,7 +14,7 @@ public class QuickSort {
 	}
 	
 	private static void quickSort(int[] arr) {
-		partition(arr, 0, arr.length-1, 0);
+		partition(arr, 0, arr.length-1);
 	}
 	
 //	Given start index and end index, and pivotIdx, do quick sort of the sub-array
@@ -31,7 +32,7 @@ public class QuickSort {
 //	11.Divide into two sub-problems
 //	11a.The first sub-problem: start=start, end=start+left-1, pivot=start
 //	11b.The second sub-problem: start=start+left+1, end=end, pivot=end
-	private static void partition(int[] arr, int start, int end, int pivotIdx) {
+	private static void partition(int[] arr, int start, int end) {
 		// Can no longer divide, so return
 		if(start>=end) {
 			return;
@@ -44,6 +45,7 @@ public class QuickSort {
 		int right = newArr.length-1;
 		
 		// hold pivot value in pivotValue
+		int pivotIdx = pickPivot(start, end);
 		int pivotValue = arr[pivotIdx];
 		
 		// Loop from start to end to partition the values around pivotValue
@@ -65,9 +67,9 @@ public class QuickSort {
 		
 		// Divide to two sub-problems
 		// First sub-problem, new start=start, new end=start+left-1, pivotIdx=start
-		partition(arr, start, start+left-1, start);
+		partition(arr, start, start+left-1);
 		// Second sub-problem, new start=start+left+1, new end=end, pivotIdx=end
-		partition(arr, start+left+1, end, end);
+		partition(arr, start+left+1, end);
 	}
 	
 //	Given start index and end index, and pivotIdx, do quick sort of the sub-array
@@ -86,15 +88,16 @@ public class QuickSort {
 //	12a.The first sub-problem: start=start, end=start+left-1, pivot=start
 //	12b.The second sub-problem: start=start+left+1, end=end, pivot=end
 	private static void quickSortInplace(int[] arr) {
-		partitionInplace(arr, 0, arr.length-1, 0);
+		partitionInplace(arr, 0, arr.length-1);
 	}
 	
-	private static void partitionInplace(int[] arr, int start, int end, int pivotIdx) {
+	private static void partitionInplace(int[] arr, int start, int end) {
 		// Can no longer divide, so return
 		if(start>=end) {
 			return;
 		}
 		
+		int pivotIdx = pickPivot(start, end);
 		// hold pivot value in pivotValue
 		int pivotValue = arr[pivotIdx];
 		
@@ -133,8 +136,13 @@ public class QuickSort {
 		
 		// Divide to two sub-problems
 		// First sub-problem, new start=start, new end=start+left-1, pivotIdx=start
-		partitionInplace(arr, start, pivotIdx-1, start);
+		partitionInplace(arr, start, pivotIdx-1);
 		// Second sub-problem, new start=start+left+1, new end=end, pivotIdx=end
-		partitionInplace(arr, pivotIdx+1, end, end);
+		partitionInplace(arr, pivotIdx+1, end);
+	}
+	
+	private static int pickPivot(int start, int end) {
+		Random r = new Random(System.currentTimeMillis());
+		return r.nextInt(end-start+1) + start;
 	}
 }
