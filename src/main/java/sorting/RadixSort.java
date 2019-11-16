@@ -24,16 +24,10 @@ public class RadixSort {
 		
 		for(int i = 0; i < arr.length; i++) {
 			String value = arr[i];
-			int digit = 0;
 			int pos = value.length()-radix;
-			if(pos>=0) {
-				digit = (int)value.charAt(pos)-48;
-			}
-			List<String> elements = sorted[digit];
-			if(elements==null) {
-				elements = new ArrayList<>();
-				sorted[digit] = elements;
-			}
+			int digit = pos<0? 0 : (int)value.charAt(pos)-48;
+
+			List<String> elements = getElementsAt(sorted, digit);
 			elements.add(value);
 		}
 		
@@ -44,5 +38,14 @@ public class RadixSort {
 				elements.forEach(v->arr[count.getAndIncrement()]=v);
 			}
 		}
+	}
+
+	private static List<String> getElementsAt(List<String>[] sorted, int digit) {
+		List<String> elements = sorted[digit];
+		if(elements==null) {
+			elements = new ArrayList<>();
+			sorted[digit] = elements;
+		}
+		return elements;
 	}
 }
