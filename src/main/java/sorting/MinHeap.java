@@ -104,7 +104,7 @@ public class MinHeap {
 			}
 		}
 		
-		if(size < Math.max(20, capacity*0.3)) {
+		if(size < Math.min(20, capacity*0.3)) {
 			shrink();
 		}
 		return min;
@@ -128,7 +128,7 @@ public class MinHeap {
 	}
 	
 	private void shrink() {
-		Integer[] newValue = new Integer[Math.min(DEFAULT_CAPACITY, capacity/2)];
+		Integer[] newValue = new Integer[Math.max(DEFAULT_CAPACITY, capacity/2)];
 		System.arraycopy(values, 0, newValue, 0, size);
 		this.values = newValue;
 	}
