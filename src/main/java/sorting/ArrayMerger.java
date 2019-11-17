@@ -2,6 +2,20 @@ package sorting;
 
 import java.util.Arrays;
 
+/**
+ * Problem: <p/>
+ * 
+ * Given an array of integer arrays, assuming that each individual array is sorted 
+ * in ascending order, merge them into one single integer array.
+ * 
+ * The output is expected to be an int array.
+ * 
+ * A similar implementation but works with input as InputStream array is implemented in 
+ * {@link ArrayStreamMerger}.
+ * 
+ * @author Hongyan
+ *
+ */
 public class ArrayMerger {
 	public static void main(String[] args) {
 		int[] a1 = new int[] {2, 4, 5, 7, 10};

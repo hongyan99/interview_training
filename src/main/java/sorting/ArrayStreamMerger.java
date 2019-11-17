@@ -10,12 +10,28 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * Problem: <p/>
+ * 
+ * Given an array of integer arrays, assuming that each individual array is sorted 
+ * in ascending order, merge them into one single integer array.
+ * 
+ * The input arrays can potentially be very large and thus it is given as InputStreams.
+ * The output is also expected to be an InputStream.
+ * 
+ * A similar implementation but works with input as int array is implemented in 
+ * {@link ArrayMerger}.
+ * 
+ * @author Hongyan
+ *
+ */
 public class ArrayStreamMerger {
 	public static void main(String[] args) throws IOException {
 		InputStream input1 = toStream("2 4 5 7 10");
 		InputStream input2 = toStream("1 2 6 20");
 		InputStream input3 = toStream("7 8 19");
-		InputStream result = merge(input1, input2, input3);
+		InputStream input4 = toStream("  ");
+		InputStream result = merge(input1, input2, input3, input4);
 		int[] data = IntsBytesConverter.bytesToInts(IOUtils.toByteArray(result));
 		System.out.println(Arrays.toString(data));
 	}
