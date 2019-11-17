@@ -34,7 +34,7 @@ public class ArrayMerger {
 //	
 //	The time complexity of this algorithm is N*K*logK since we have to go through all N*K elements,
 //	and each element we insert into the heap takes logK time, fetch an element from the heap is 
-//	constant time.
+//	also logK time.
 //	
 //	The space complexity is the size of the min heap K.	
 	private static int[] merge(int[] ... arrays) {

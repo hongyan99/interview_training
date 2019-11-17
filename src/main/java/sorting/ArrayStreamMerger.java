@@ -46,7 +46,8 @@ public class ArrayStreamMerger {
 //	
 //	The time complexity of this algorithm is N*K*logK since we have to go through all N*K elements,
 //	and each element we insert into the heap takes logK time, fetch an element from the heap is 
-//	constant time.
+//	also logK time. Since this is implemented as a Stream, the time needed to access to each element is delayed to until
+//	when it is accessed. This is different from that of the ArrayMerger.
 //	
 //	The space complexity is the size of the min heap K.	
 	private static InputStream merge(InputStream ... arrays) throws IOException {
