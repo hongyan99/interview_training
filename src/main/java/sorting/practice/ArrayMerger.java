@@ -1,6 +1,8 @@
-package sorting;
+package sorting.practice;
 
 import java.util.Arrays;
+
+import sorting.ArrayStreamMerger;
 
 /**
  * Problem: <p/>
@@ -18,13 +20,17 @@ import java.util.Arrays;
  */
 public class ArrayMerger {
 	public static void main(String[] args) {
-		int[] a1 = new int[] {2, 4, 5, 7, 10};
-		int[] result = merge(a1);
-		System.out.println(Arrays.toString(result));
-		int[] a2 = new int[] {1, 2, 6, 20};
-		int[] a3 = new int[] {};
-		int[] a4 = new int[] {7, 8, 19};
-		result = merge(a1, a2, a3, a4);
+		int[] a1 = new int[] {34, 26, 20, 13, 11, 7, 4, 4};
+		int[] a2 = new int[] {41, 34, 27, 23, 19, 10, 8, 0};
+		int[] a3 = new int[] {26, 25, 19, 12, 7, 7, 7, 5};
+		int[] a4 = new int[] {46, 39, 35, 33, 27, 19, 12, 9};
+		int[] a5 = new int[] {33, 24, 22, 18, 18, 10, 3, 0};
+		int[] a6 = new int[] {42, 35, 35, 30, 21, 20, 12, 9};
+		int[] a7 = new int[] {42, 33, 24, 21, 12, 12, 8, 7};
+		int[] a8 = new int[] {29, 23, 21, 18, 18, 11, 8, 7};
+		int[] a9 = new int[] {35, 30, 30, 23, 15, 14, 8, 7};
+		int[] a10 = new int[] {20, 18, 17, 16, 12, 11, 5, 4};
+		int[] result = merge(a1, a2, a3, a4,a5,a6,a7,a8,a9,a10);
 		System.out.println(Arrays.toString(result));
 	}
 	
@@ -37,13 +43,22 @@ public class ArrayMerger {
 //	also logK time.
 //	
 //	The space complexity is the size of the min heap K.	
-	private static int[] merge(int[] ... arrays) {
+	private static int[] merge(int[] ... arr) {
+		int dir = 0;
+		int kk = 0;
+		while(dir==0 && kk<arr.length) {
+			dir = getDirection(arr[kk++]);
+		}
+
 		MinHeap heap = new MinHeap();
 		int count = 0;
-		for(int k = 0; k < arrays.length; k++) {
-			if(arrays[k].length>0) {
-				heap.insert(new Element(arrays[k]));
-				count += arrays[k].length;
+		for(int k = 0; k < arr.length; k++) {
+			if(arr[k].length>0) {
+				if(getDirection(arr[k])>0) {
+					reverse(arr[k]);
+				}
+				heap.insert(new Element(arr[k]));
+				count += arr[k].length;
 			}
 		}
 		int[] result = new int[count];
@@ -51,8 +66,32 @@ public class ArrayMerger {
 		while(!heap.isEmpty()) {
 			result[index++] = heap.pop();
 		}
-		
+
+		if(dir>0) {
+			reverse(result);
+		}
 		return result;
+	}
+	
+	private static int getDirection(int[] arr) {
+		if(arr.length==0) return 0;
+		if(arr[0]==arr[arr.length-1]) {
+			return 0;
+		} else if(arr[0]>arr[arr.length-1]) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+	
+	private static void reverse(int[] a) {
+		if(a.length>0) {
+			for(int i=0; i<a.length; i++) {
+				int temp = a[i];
+				a[i] = a[a.length-i-1];
+				a[a.length-i-1] = temp;
+			}
+		}
 	}
 	
 	private static class Element {
