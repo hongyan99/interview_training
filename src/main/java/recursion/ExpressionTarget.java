@@ -47,8 +47,8 @@ public class ExpressionTarget {
 	// do this for the RHS since when we reach the "+" operator, we already have all we 
 	// need to calculate the LHS.
 	private static class Addition extends Operation {
-		private long left;
-		private long right;
+		private final long left;
+		private final long right;
 		private Operation multiplication;
 		
 		public Addition(long left, long right) {
@@ -64,7 +64,7 @@ public class ExpressionTarget {
 				// multiplication, we simply create a dummy multiplication operation 
 				// so that we can reuse the logic implemented in the Multiplication 
 				// Operation to handle join. 
-				add.multiplication = new Multiplication(1, right*10+(int)next-48);
+				add.multiplication = new Multiplication(1, join(right, next));
 			} else {
 				add.multiplication = multiplication.join(next);
 			} 
@@ -75,7 +75,7 @@ public class ExpressionTarget {
 		public Operation multiply(char next) {
 			Addition add = new Addition(left, right);
 			if(multiplication==null) {
-				add.multiplication = new Multiplication(right, (int)next-48);
+				add.multiplication = new Multiplication(right, charToLong(next));
 			} else {
 				add.multiplication = multiplication.multiply(next);
 			}
@@ -85,9 +85,9 @@ public class ExpressionTarget {
 		@Override
 		public Operation add(char next) {
 			if(multiplication==null) {
-				return new Addition(this.left + right, (int)next-48);
+				return new Addition(this.left + right, charToLong(next));
 			} else {
-				return new Addition(left + multiplication.evaluate(), (int)next-48);
+				return new Addition(left + multiplication.evaluate(), charToLong(next));
 			}
 		}
 
@@ -106,8 +106,8 @@ public class ExpressionTarget {
 	// do this for the RHS since when we reach the "*" operator, we already have all we 
 	// need to calculate the LHS.
 	private static class Multiplication extends Operation {
-		private long left;
-		private long right;
+		private final long left;
+		private final long right;
 		private Operation join;
 		
 		public Multiplication(long left, long right) {
@@ -119,7 +119,7 @@ public class ExpressionTarget {
 		public Operation join(char next) {
 			Multiplication multi = new Multiplication(left, right);
 			if(join==null) {
-				multi.join = new Join(10*right+(int)next-48);
+				multi.join = new Join(join(right, next));
 			} else {
 				multi.join = join.join(next);
 			}
@@ -129,18 +129,18 @@ public class ExpressionTarget {
 		@Override
 		public Operation multiply(char next) {
 			if(join==null) {
-				return new Multiplication(this.left * right, (int)next-48);
+				return new Multiplication(this.left * right, charToLong(next));
 			} else {
-				return new Multiplication(this.left * join.evaluate(), (int)next-48);
+				return new Multiplication(this.left * join.evaluate(), charToLong(next));
 			}
 		}
 
 		@Override
 		public Operation add(char next) {
 			if(join==null) {
-				return new Addition(left * right, (int)next-48);
+				return new Addition(left * right, charToLong(next));
 			} else {
-				return new Addition(left * join.evaluate(), (int)next-48);
+				return new Addition(left * join.evaluate(), charToLong(next));
 			}
 		}
 
@@ -154,10 +154,10 @@ public class ExpressionTarget {
 	}
 	
 	private static class Join extends Operation{
-		private long left;
+		private final long left;
 		
 		public Join(char c) {
-			this.left = (int)c-48; 
+			this.left = charToLong(c); 
 		}
 		
 		public Join(long left) {
@@ -166,17 +166,17 @@ public class ExpressionTarget {
 		
 		@Override
 		public Operation join(char next) {
-			return new Join(10*left+(int)next-48);
+			return new Join(join(left, next));
 		}
 
 		@Override
 		public Operation multiply(char next) {
-			return new Multiplication(left, (int)next-48);
+			return new Multiplication(left, charToLong(next));
 		}
 
 		@Override
 		public Operation add(char next) {
-			return new Addition(left, (int)next-48);
+			return new Addition(left, charToLong(next));
 		}
 
 		@Override
@@ -190,5 +190,13 @@ public class ExpressionTarget {
 		public abstract Operation multiply(char next);
 		public abstract Operation add(char next);
 		public abstract long evaluate();
+		
+		static long join(long l, char c) {
+			return 10*l + (int)c-48;
+		}
+		
+		static long charToLong(char c) {
+			return (int)c-48;
+		}
 	}
 }
