@@ -59,11 +59,14 @@ public class NQueen {
 		BitSet bs = new BitSet(indices.length);
 		for(int r = 0; r < row; r++) {
 			int col = indices[r];
+			// for column, no need to check for row
 			bs.set(col);
 			if(col-row+r>=0) {
+				// for diagonal: bottom-left <--> top-right
 				bs.set(col-row+r);
 			}
 			if(col+row-r<indices.length) {
+				// for diagonal: top-left <--> bottom-right
 				bs.set(col+row-r);
 			}
 		}
