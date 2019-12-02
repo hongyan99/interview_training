@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+//Using the given digits, find all expressions that gives the given number.
+//Operations can be used are "Join", "Add" and "Multiply".
+//Join: 2 Join 3 -> 23
+//Add: 2 + 3 -> 5
+//Multiply: 2 * 3 = 6
+//Note that the operation precedence from high to low is Join->Multiply->Add
 public class ExpressionTarget2 {
 	public static void main(String[] args) {
 		String[] result = findExpressions("222", 24);

@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// Using the given digits, find all expressions that gives the given number.
+// Operations can be used are "Join", "Add" and "Multiply".
+// Join: 2 Join 3 -> 23
+// Add: 2 + 3 -> 5
+// Multiply: 2 * 3 = 6
+// Note that the operation precedence from high to low is Join->Multiply->Add
+// The algorithm is a bit too complex. Use the one in ExpressionTarget2 instead.
 public class ExpressionTarget {
 	public static void main(String[] args) {
 		String[] result = findExpressions("222", 24);
