@@ -9,6 +9,7 @@ public class BracketPairs {
 		System.out.println(Arrays.toString(computePairs(4)));
 	}
 	
+	// Given a positive integer n, find ALL well formed round brackets string of length 2*n.
 	private static String[] computePairs(int n) {
 		Set<String> result = new HashSet<>();
 		work(n, n, "", result);
