@@ -43,16 +43,16 @@ public class UniversalSubTree {
 	private static boolean check(int val, TreeNode node, AtomicInteger count) {
 		return (node==null || (findSingleValueTrees(node, count) && node.val==val));
 	}
-
-	private static class TreeNode {
-        public int val;
-        public TreeNode left_ptr;
-        public TreeNode right_ptr;
-    }
 	
 	private static TreeNode create(int val) {
 		TreeNode node = new TreeNode();
 		node.val = val;
 		return node;
 	}
+
+	private static class TreeNode {
+        public int val;
+        public TreeNode left_ptr;
+        public TreeNode right_ptr;
+    }
 }
