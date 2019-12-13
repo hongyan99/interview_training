@@ -3,10 +3,8 @@ package graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /*
  * You are given a dictionary of words named words, and two strings named start and stop. 
@@ -34,29 +32,84 @@ public class WordTransformer {
 	}
 	
 	private static String[] transform(String[] words, String start, String stop) {
-		Set<String> wordsSet = new HashSet<>(Arrays.asList(words));
+		if(start.length()>26) {
+			return transform2(words, start, stop);
+		} else {
+			return transform1(words, start, stop);
+		}
+	}
+	
+	private static String[] transform2(String[] words, String start, String stop) {
 		Map<String, String> parentsMap = new HashMap<>();
+		parentsMap.put(start, "");
+		List<String> queue = new ArrayList<>();
+		queue.add(start);
+		while(!queue.isEmpty()) {
+			String s = queue.remove(0);
+			String target = s.equals(start) && s.equals(stop)? null : stop;
+			List<String> neighbours = getNeighboursDictBased(words, s, target);
+			if(neighbours.size()==1 && neighbours.get(0).equals(stop)) {
+				return constructResult(parentsMap, s, start, stop);
+			}
+			
+			neighbours.forEach(neighbour-> {
+				if(parentsMap.get(neighbour)==null) {
+					parentsMap.put(neighbour, s);
+					queue.add(neighbour);
+				}
+			});
+		}
+		return new String[] {"-1"};
+	}
+
+	private static List<String> getNeighboursDictBased(String[] words, String s, String target) {
+		List<String> neighbours = new ArrayList<>();
+		for(int i = 0; i<words.length; i++) {
+			int diffCount = 0;
+			for(int k = 0; k<words[i].length()&&diffCount<2; k++) {
+				if(words[i].charAt(k)!=s.charAt(k)) {
+					diffCount++;
+				}
+				if(diffCount>1) {
+					break;
+				}
+			}
+			if(diffCount==1) {
+				if(words[i].equals(target)) {
+					return Arrays.asList(new String[] {target});
+				}
+				neighbours.add(words[i]);
+			}
+		}
+		return neighbours;
+	}
+
+	private static String[] transform1(String[] words, String start, String stop) {
+		Map<String, Boolean> wordsMap = new HashMap<>();
+		for(int i = 0; i < words.length; i++) {
+			wordsMap.put(words[i], Boolean.TRUE);
+		}
+		Map<String, String> parentsMap = new HashMap<>();
+		parentsMap.put(start, "");
 		// for each character in start, find all words in dictionary that has just that
 		// character different, compare each such word with stop. If match, then found 
 		// transformation, walk back the parent chain to construct the result array.
-		List<Source> queue = new ArrayList<>();
-		queue.add(new Source(start, 0));
+		List<String> queue = new ArrayList<>();
+		queue.add(start);
 		while(!queue.isEmpty()) {
-			Source s = queue.remove(0);
-			for(int i = s.index; i < s.source.length(); i++) {
-				String target = s.source.equals(start) && s.source.equals(stop)? null : stop;
-				List<String> neighbours = getNeighboursAt(wordsSet, s.source, target, i);
-				if(neighbours.size()==1 && neighbours.get(0).equals(stop)) {
-					return constructResult(parentsMap, s.source, start, stop);
-				}
-				
-				neighbours.forEach(neighbour-> {
-					if(parentsMap.get(neighbour)==null) {
-						parentsMap.put(neighbour, s.source);
-						queue.add(new Source(neighbour, 0));
-					}
-				});
+			String s = queue.remove(0);
+			String target = s.equals(start) && s.equals(stop)? null : stop;
+			List<String> neighbours = getNeighboursCharBased(wordsMap, s, target);
+			if(neighbours.size()==1 && neighbours.get(0).equals(stop)) {
+				return constructResult(parentsMap, s, start, stop);
 			}
+			
+			neighbours.forEach(neighbour-> {
+				if(parentsMap.get(neighbour)==null) {
+					parentsMap.put(neighbour, s);
+					queue.add(neighbour);
+				}
+			});
 		}
 		return new String[] {"-1"};
     }
@@ -64,7 +117,7 @@ public class WordTransformer {
 	private static String[] constructResult(Map<String, String> parentsMap, String last, String start, String stop) {
 		List<String> all = new ArrayList<>();
 		String child = last;
-		while(parentsMap.get(child)!=null) {
+		while(!parentsMap.get(child).isEmpty()) {
 			all.add(0, child);
 			child = parentsMap.get(child);
 		}
@@ -73,28 +126,21 @@ public class WordTransformer {
 		return all.toArray(new String[all.size()]);
 	}
 	
-	private static List<String> getNeighboursAt(Set<String> wordsSet, String source, String target, int index) {
-		char[] charArray = source.toCharArray();
+	private static List<String> getNeighboursCharBased(Map<String, Boolean> wordsMap, String source, String target) {
 		List<String> neighbours = new ArrayList<>();
-		for(int i = 0; i < chars.length; i++) {
-			charArray[index]=chars[i];
-			String newWord = String.valueOf(charArray);
-			if(newWord.equals(target)) {
-				return Arrays.asList(new String[] {target});
-			}
-			if(wordsSet.contains(newWord)) {
-				neighbours.add(newWord);
+		for(int index = 0; index < source.length(); index++) {
+			char[] charArray = source.toCharArray();
+			for(int i = 0; i < chars.length; i++) {
+				charArray[index]=chars[i];
+				String newWord = String.valueOf(charArray);
+				if(newWord.equals(target)) {
+					return Arrays.asList(new String[] {target});
+				}
+				if(wordsMap.get(newWord)!=null) {
+					neighbours.add(newWord);
+				}
 			}
 		}
 		return neighbours;
-	}
-	
-	private static class Source {
-		String source;
-		int index;
-		Source(String source, int index) {
-			this.source = source;
-			this.index = index;
-		}
 	}
 }
