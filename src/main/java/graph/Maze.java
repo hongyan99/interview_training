@@ -26,11 +26,11 @@ public class Maze {
 	}
 	
     static int[][] findShortestPath(String[] grid) {
-    	// Because the fact that the keys held on by the path determines whether the
-    	// path can continue forward, we are really walking in a 3-D space rather than
-    	// a 2-D one, thus the visited map should take this into consideration, that
-    	// is, the same grid represent a different node if they have different
-    	// vertical coordinates (held different keys)
+    	// Because the fact that the keys held by the path determines whether the
+    	// path can continue forward, we are really walking in a 3-D space (I call it
+    	// the "Hyper Grid") rather than a 2-D one (the Grid), thus the visited map 
+    	// should built for the cells in the Hyper Grid (the Node), that is, the same 
+    	// grid cell that hold different keys are treated as different Nodes.
     	Map<Node, Node> parentMap = new HashMap<>();
     	
     	int[] start = findStart(grid);
@@ -41,7 +41,7 @@ public class Maze {
     	while(!queue.isEmpty()) {
     		Node node = queue.remove(0);
         	List<Node> neighbours = findNeighbours(grid, node);
-        	if(neighbours.size()==1 && neighbours.get(0).getCoord().length==3) {
+        	if(neighbours.size()==1 && neighbours.get(0).isTerminal()) {
         		Node child = neighbours.get(0);
         		parentMap.put(child, node);
         		return constructResult(parentMap, node, child);
@@ -58,12 +58,10 @@ public class Maze {
     	return null;
     }
 
+    // Walk back the parent chain to construct the path
 	private static int[][] constructResult(Map<Node, Node> priorCellMap, Node parent, Node goal) {
 		List<int[]> result = new ArrayList<>();
-		int[] goalCell = new int[2];
-		goalCell[0] = goal.getCoord()[0];
-		goalCell[1] = goal.getCoord()[1];
-		result.add(0,goalCell);
+		result.add(0, goal.getCoord());
 		result.add(0, parent.getCoord());
 		while(true) {
 			parent = priorCellMap.get(parent);
@@ -76,6 +74,7 @@ public class Maze {
 		return result.toArray(new int[result.size()][2]);
 	}
 
+	// Logic that helps to find the neighboring Nodes.
 	private static List<Node> findNeighbours(String[] grid, Node node) {
 		int[] cell = node.getCoord();
 		int[][] options = new int[4][2];
@@ -98,14 +97,14 @@ public class Maze {
 				switch(c) {
 				case GOAL:
 					returns.clear();
-					int[] result = new int[3];
-					result[0]=options[i][0];
-					result[1]=options[i][1];
-					returns.add(new Node(result, node.getFlag()));
+					Node terminalNode = new Node(options[i], node.getFlag());
+					terminalNode.terminate();
+					returns.add(terminalNode);
 					return returns;
 				case WATER:
 					break;
 				case LAND:
+				case START:
 					returns.add(new Node(options[i], node.getFlag()));
 					break;
 				case 'a':
@@ -118,7 +117,7 @@ public class Maze {
 				case 'h':
 				case 'i':
 				case 'j':
-					KeyFlag flag = node.getFlag().set(c);
+					KeyFlag flag = node.getFlag().set(c); // new KeyFlag is generated
 					returns.add(new Node(options[i], flag));
 					break;
 				case 'A':
@@ -135,8 +134,6 @@ public class Maze {
 						returns.add(new Node(options[i], node.getFlag()));
 					}
 					break;
-				case START:
-					returns.add(new Node(options[i], node.getFlag()));
 				}
 			}
 		}
@@ -153,6 +150,8 @@ public class Maze {
 		throw new IllegalArgumentException();
 	}
 
+	// This keeps track of the keys a Node holds. The hashCode and equals methods must be implemented
+	//  so that it can support the same methods of the Node class.
 	private static class KeyFlag {
 		private BitSet flag = new BitSet(10);
 		
@@ -180,10 +179,16 @@ public class Maze {
 		}
 	}
 	
+	// Node represents the cells in the hyper grid. Such cell has attributes coordinates (x,y) and
+	// keys (KeyFlag). THe hashCode and equals method are implemented so that we comparison can be
+	// made to distinguish in between cells on different coordinates, or those that hold different
+	// keys.
 	private static class Node {
 		private final int[] coord;
 		private final KeyFlag flag;
+		private boolean terminal;
 
+		// A dummy root node so that we can mark the START node as been visited
 		public static Node ROOT = new Node(new int[] {-1,-1}, null);
 		
 		public Node(int[] coord, KeyFlag flag) {
@@ -197,6 +202,14 @@ public class Maze {
 
 		public KeyFlag getFlag() {
 			return flag;
+		}
+
+		public boolean isTerminal() {
+			return terminal;
+		}
+
+		public void terminate() {
+			this.terminal = true;
 		}
 		
 		@Override
