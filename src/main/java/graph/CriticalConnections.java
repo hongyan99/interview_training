@@ -9,16 +9,16 @@ import java.util.Map;
 
 public class CriticalConnections {
 	public static void main(String[] args) {
-//		@SuppressWarnings("unchecked")
-//		List<List<Integer>> connections = createConnections(newPair(0,1), newPair(1,2), newPair(2,0), newPair(1,3));
-//		List<List<Integer>> criticalConnections = findCriticalConnections(4, 4, connections);
-//		criticalConnections.forEach(l-> {
-//			System.out.println("(" + l.get(0) + ", " + l.get(1) + ")");
-//		});
-		List<List<Integer>> criticalConnections = findCriticalConnections(1, 0, new ArrayList<>());
+		@SuppressWarnings("unchecked")
+		List<List<Integer>> connections = createConnections(newPair(0,1), newPair(1,2), newPair(2,0), newPair(1,3));
+		List<List<Integer>> criticalConnections = findCriticalConnections(4, 4, connections);
 		criticalConnections.forEach(l-> {
 			System.out.println("(" + l.get(0) + ", " + l.get(1) + ")");
 		});
+//		List<List<Integer>> criticalConnections = findCriticalConnections(1, 0, new ArrayList<>());
+//		criticalConnections.forEach(l-> {
+//			System.out.println("(" + l.get(0) + ", " + l.get(1) + ")");
+//		});
 	}
 	
 	private static List<List<Integer>> createConnections(
@@ -101,10 +101,11 @@ public class CriticalConnections {
 		}
 	}
 
-	private static void recordCycle(Integer cycleTail, Integer cycleHeadKey, Map<Integer, Integer> parentMap,
+	private static void recordCycle(Integer key, Integer cycleHeadKey, Map<Integer, Integer> parentMap,
 			Map<Integer, List<Integer>> criticalConnections) {
-		Integer parentKey = cycleTail;
-		Integer key = cycleHeadKey;
+		removePair(key, cycleHeadKey, criticalConnections);
+		removePair(cycleHeadKey, key, criticalConnections);
+		Integer parentKey = parentMap.get(key);
 		while(key!=cycleHeadKey) {
 			removePair(parentKey, key, criticalConnections);
 			removePair(key, parentKey, criticalConnections);
