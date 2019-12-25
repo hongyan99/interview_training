@@ -7,6 +7,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Given a two-dimensional grid of size n * m that represents a maze-like area, 
+ * a start cell and a goal cell, you have to find the shortest path from the start 
+ * to the goal. You can go up, down, left or right from a cell, but not diagonally.
+ * 
+ * Each cell in the grid can be either land or water or door or key or start or 
+ * goal. You can travel on any cells but water.
+ * 
+ * Every key and every door belongs to a particular “type”. For example a key of 
+ * type ‘a’ can open a door of type ‘A’ but not a door of type ‘B’. There can be 
+ * more than one key of a particular type in the maze, all keys of one type are 
+ * equivalent. Similarly there can be more than one door of any type. You cannot 
+ * travel through a door unless you have picked up a key of the corresponding 
+ * type before. A key is picked up by visiting its cell. If you have picked up a 
+ * certain type of key, you can then travel through any doors of that type any 
+ * number of times.
+ * 
+ * It is allowed to revisit a cell.
+ * 
+ * @author hongyanli
+ *
+ */
 public class Maze {
 	private static final char WATER='#';
 	private static final char LAND='.';

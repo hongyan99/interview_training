@@ -8,6 +8,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * You need to take n courses and these courses are labeled from 0 to n-1. Few of 
+ * these courses have prerequisites. You are given the prerequisites as a list of 
+ * pairs where each pair is of form : [x, y]  where to take course 'x', you need 
+ * to complete course 'y' before it. Given these pairs and also the count of total 
+ * courses n, you need to return the ordering in which the courses should be 
+ * taken. Note that there might be multiple possible answers, you need to just 
+ * return any one of them and if any answer does not exist, return an array having 
+ * -1.
+ * 
+ * @author hongyanli
+ *
+ */
 public class CourseSchedule {
 	public static void main(String[] args) {
 		List<List<Integer>> prerequisites = new ArrayList<>();

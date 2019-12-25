@@ -1,4 +1,4 @@
-package tree;
+package graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+/**
+ * Given a sorted dictionary of an alien language, you have to find the order of 
+ * characters in that language.
+ * 
+ * @author hongyanli
+ *
+ */
 public class CharacterOrder {
 	public static void main(String[] args) {
 		String[] words = new String[] {"oooh", "ooho", "oqho", "oqhh", "oqq"};

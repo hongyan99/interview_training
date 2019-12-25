@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
+/**
  * You are given a dictionary of words named words, and two strings named start and stop. 
  * All given strings have equal length. Dictionary words are not in any particular order, 
  * there may be duplicates, too.

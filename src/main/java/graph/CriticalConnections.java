@@ -28,18 +28,17 @@ public class CriticalConnections {
 	
 	public static List<List<Integer>> findCriticalConnections(
 			int noOfServers, int noOfConnections, List<List<Integer>> connections) {
-    	final Map<Integer, List<Integer>> adjacencyLists = buildAdjacencyLists(connections);
-    	// We will use the parentMap combined with the visited map to find the cycles and mark the nodes
-    	//  in cycle, thus any node not marked as in a cycle are critical.
+    	final Map<Integer, List<Integer>> adjacencyLists = buildAdjacencyLists(noOfServers, connections);
+    	// We will use the parentMap combined with the visited map to find the cycles and identify the edges
+    	// in cycle, thus any edge not identified as in a cycle are critical.
     	Map<Integer, Integer> parentMap = new HashMap<>();
-    	// we use a map to store the visited. If the value is 1, it denotes the node is visited. If the value
-    	// is 0, it indicate that the node is done visiting. And at last, when we found a cycle, we will update
-    	// value to 2, and thus at the end, all nodes that have visited value equal to 0 are the ones that are
-    	// critical.
+    	// we use a map to store the visited. If the value is 1, it denotes the node is visited but not done 
+    	// visiting yet. If the value is 0, it indicate that the node is done visiting. And at last, when we 
+    	// found a cycle, we will update value to 2, and thus at the end, all nodes that have visited value 
+    	// equal to 0 are the ones that are critical.
     	Map<Integer, Integer> visited = new HashMap<>();
     	
-    	// TODO: Need to make sure that we are copying the values of the map values not their references
-    	final Map<Integer, List<Integer>> criticalConnections = new HashMap<>();
+    	final Map<Integer, List<Integer>> criticalConnections = new HashMap<>(noOfServers);
     	adjacencyLists.forEach((key, value)-> {
     		criticalConnections.put(key, new ArrayList<>(value));
     	});
@@ -60,8 +59,8 @@ public class CriticalConnections {
 		while(keysIter.hasNext()) {
 			Integer key = keysIter.next();
 			criticalConnections.get(key).forEach(value-> {
-			returns.add(newPair(key, value));
-			removePair(value, key, criticalConnections);
+				returns.add(newPair(key, value));
+				removePair(value, key, criticalConnections);
 			});
 			keysIter.remove();
 		}
@@ -78,7 +77,7 @@ public class CriticalConnections {
 		return pair;
 	}
 
-	private static void visit(int key, Map<Integer, List<Integer>> adjacencyLists, 
+	private static void visit(Integer key, Map<Integer, List<Integer>> adjacencyLists, 
 			Map<Integer, Integer> visited, Map<Integer, Integer> parentMap,
 			Map<Integer, List<Integer>> criticalConnections) {
 		if(!visited.containsKey(key)) {
@@ -101,17 +100,16 @@ public class CriticalConnections {
 		}
 	}
 
-	private static void recordCycle(Integer key, Integer cycleHeadKey, Map<Integer, Integer> parentMap,
+	private static void recordCycle(Integer cycleTailKey, Integer cycleHeadKey, Map<Integer, Integer> parentMap,
 			Map<Integer, List<Integer>> criticalConnections) {
-		removePair(key, cycleHeadKey, criticalConnections);
-		removePair(cycleHeadKey, key, criticalConnections);
-		Integer parentKey = parentMap.get(key);
-		while(key!=cycleHeadKey) {
+		Integer parentKey = cycleTailKey;
+		Integer key = cycleHeadKey;
+		do {
 			removePair(parentKey, key, criticalConnections);
 			removePair(key, parentKey, criticalConnections);
 			key = parentKey;
 			parentKey = parentMap.get(key);
-		}
+		} while(key!=cycleHeadKey);
 	}
 
 	private static void removePair(Integer key, Integer key1,
@@ -122,8 +120,9 @@ public class CriticalConnections {
 		}
 	}
 
-	private static Map<Integer, List<Integer>> buildAdjacencyLists(List<List<Integer>> connections) {
-    	final Map<Integer, List<Integer>> result = new HashMap<Integer, List<Integer>>();
+	private static Map<Integer, List<Integer>> buildAdjacencyLists(
+			int mapCapacity, List<List<Integer>> connections) {
+    	final Map<Integer, List<Integer>> result = new HashMap<Integer, List<Integer>>(mapCapacity);
     	connections.forEach(l-> {
     		getList(result, l.get(0)).add(l.get(1));
     		getList(result, l.get(1)).add(l.get(0));
@@ -133,7 +132,9 @@ public class CriticalConnections {
 
 	private static List<Integer> getList(Map<Integer, List<Integer>> result, Integer key) {
 		List<Integer> l = result.getOrDefault(key, new ArrayList<Integer>());
-		result.put(key, l);
+		if(l.size()==0) {
+			result.put(key, l);
+		}
 		return l;
 	}
 }
