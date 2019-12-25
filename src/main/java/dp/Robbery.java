@@ -18,11 +18,11 @@ public class Robbery {
     }
 
 	private static int maxStolenValue(int i, int[] values, int[] mem) {
-		if(i==0) {
-			return mem[0]=values[0];
-		}
 		if(mem[i]>-1) {
 			return mem[i];
+		}
+		if(i==0) {
+			return mem[0]=values[0];
 		}
 		if(i==1) {
 			return Math.max(values[0], values[1]);
