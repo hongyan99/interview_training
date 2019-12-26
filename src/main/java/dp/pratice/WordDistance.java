@@ -1,4 +1,4 @@
-package dp;
+package dp.pratice;
 
 public class WordDistance {
 	public static void main(String[] args) {

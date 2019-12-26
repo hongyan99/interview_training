@@ -1,4 +1,4 @@
-package dp;
+package dp.pratice;
 
 public class Robbery {
 	public static void main(String[] args) {

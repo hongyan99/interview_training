@@ -1,4 +1,4 @@
-package dp;
+package dp.pratice;
 
 import java.util.Arrays;
 import java.util.List;
