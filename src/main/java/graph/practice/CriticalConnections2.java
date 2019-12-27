@@ -21,20 +21,18 @@ import java.util.Map;
  * 
  * In this implementation, we will use the bridge searching algorithm. THe algorithm works as below:
  * 
- * 1. Do a DFS traversal and along the way, mark each node with the index (every step forward, increment 
- *    the index, we name it "level", and the map that store the index we name it levelMap).
- * 2. The moment we reach a child node that has already been marked with a lower level, override the 
- *    node with that lower level value.
- * 3. Also, as we unwind back the call stack (right after the recursive call), override the node level
- *    with this lower level value (use min function).
- * 4. The result is that all nodes in a cycle will be marked with the index that is the lowest in the 
- *    cycle. Since a bridge edge is not part of a cycle, the two nodes of the edge don't have the same
- *    level value which tells us it is a bridge edge.
+ * 1. Do a DFS traversal and along the way, mark each node with an arrival time (every step forward, 
+ *    increment the arrival time as a counter. We use a map to store the arrival time.
+ * 2. The moment we reach a child node that has already been marked with an earlier arrival time, we
+ *    store the lower arrival time to the lowestTime map.
+ * 3. Also, as we unwind back the call stack (right after the recursive call), we store the lowest
+ *    arrival time (minimum of the parent and the child arrival time) to the parent as its lowest time.
+ * 4. The result is that all nodes in a cycle will be marked with the lowest arrival time within the 
+ *    cycle. Since in a bridge edge, one or both of the two nodes of the edge might fall into a cycle
+ *    and thus the two sides will have two different time. More precisely, follow the direct of the 
+ *    DAG, the child node will have a lowestTime that is greater than the arrivalTime of the parent
+ *    node.
  *    
- * NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE 
- * This is not yet fully working!
- * 
- * 
  * @author hongyanli
  *
  */
@@ -82,33 +80,20 @@ public class CriticalConnections2 {
 		// value to 2, and thus at the end, all nodes that have visited value equal to 0
 		// are the ones that are
 		// critical.
-		Map<Integer, Integer> visited = new HashMap<>();
-		
-		final Map<Integer, Integer> levelMap = new HashMap<>();
+		final Map<Integer, Integer> arrivalTime = new HashMap<>(); // also function as visited Map
+		final Map<Integer, Integer> lowestTime = new HashMap<>();
+		final List<List<Integer>> result = new ArrayList<>();
 
 		for (int i = 0; i < noOfServers; i++) {
-			if (visited.containsKey(i)) {
+			if (arrivalTime.get(i)!=null) {
 				continue;
 			}
 
-			visit(i, adjacencyLists, visited, parentMap, levelMap, -1);
+			visit(i, adjacencyLists, parentMap, lowestTime, arrivalTime, 0, result);
 		}
 
-		return packageResult(levelMap, connections);
-	}
-
-	private static List<List<Integer>> packageResult(Map<Integer, Integer> levelMap, List<List<Integer>> connections) {
-		List<List<Integer>> result = new ArrayList<>();
-		connections.forEach(l-> {
-			if(levelMap.get(l.get(0))!=levelMap.get(l.get(1))) {
-				result.add(l);
-			}
-		});
-		if (result.size() == 0) {
-			List<Integer> pair = new ArrayList<>();
-			pair.add(-1);
-			pair.add(-1);
-			result.add(pair);
+		if(result.size()==0) {
+			addConnection(result, -1, -1);
 		}
 		return result;
 	}
@@ -122,26 +107,34 @@ public class CriticalConnections2 {
 		return result;
 	}
 
-	private static void visit(Integer key, Map<Integer, List<Integer>> adjacencyLists, Map<Integer, Integer> visited,
-			Map<Integer, Integer> parentMap, Map<Integer, Integer> levelMap, int priorLevel) {
-		final int level = priorLevel + 1;
+	private static void visit(Integer u, Map<Integer, List<Integer>> adjLists, Map<Integer, Integer> parentMap, 
+			Map<Integer, Integer> lowestTime, Map<Integer, Integer> arrivalTime, int time, List<List<Integer>> critical) {
+
 		// we only visit the nodes that we have not yet visited
-		visited.put(key, 1); // value "1" indicates that node is being visited (when done visiting we mark it as "0"
-		List<Integer> children = adjacencyLists.get(key);
-		levelMap.put(key, level);
+		List<Integer> children = adjLists.get(u);
+		arrivalTime.put(u, time); // also function as visited Map
+		lowestTime.put(u, time);
 		if (children != null) {
-			children.forEach(childKey -> {
-				if (!childKey.equals(parentMap.get(key))) {
-					if (visited.containsKey(childKey)) {
-						levelMap.put(key, Math.min(levelMap.get(childKey), levelMap.get(key)));
-					} else {
-						parentMap.put(childKey, key);
-						visit(childKey, adjacencyLists, visited, parentMap, levelMap, level);
-						levelMap.put(key, Math.min(levelMap.get(childKey), levelMap.get(key)));
+			for(Integer v : children) {
+				if (arrivalTime.get(v)==null) {
+					parentMap.put(v, u);
+					visit(v, adjLists, parentMap, lowestTime, arrivalTime, time + 1, critical);
+					lowestTime.put(u, Math.min(lowestTime.get(v), lowestTime.get(u)));
+					if(lowestTime.get(v) > arrivalTime.get(u)) {
+						addConnection(critical, u, v);
 					}
+				} else if (!v.equals(parentMap.get(u))) {
+					lowestTime.put(u, Math.min(lowestTime.get(v), lowestTime.get(u)));
 				}
-			});
+			}
 		}
+	}
+
+	private static void addConnection(List<List<Integer>> critical, Integer u, Integer v) {
+		List<Integer> edge = new ArrayList<>();
+		edge.add(u);
+		edge.add(v);
+		critical.add(edge);
 	}
 
 	private static List<Integer> getList(Map<Integer, List<Integer>> result, Integer key) {
