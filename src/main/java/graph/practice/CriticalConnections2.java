@@ -2,9 +2,7 @@ package graph.practice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * There are n servers numbered from 0 to n-1 connected by undirected server-to-server connections forming 
@@ -32,6 +30,12 @@ import java.util.Map;
  *    and thus the two sides will have two different time. More precisely, follow the direct of the 
  *    DAG, the child node will have a lowestTime that is greater than the arrivalTime of the parent
  *    node.
+ *    
+ * One observation while trying to pass all the stringent test cases from IKWeb: using primitive arrays
+ * to store the parentMap, adjacency list and other intermediate variables improved the performance by
+ * about 15 percent. WIthout this 15%, one of the tests would simply timeout. Whether the test should be
+ * that stringent is arguable, but this fact tells us, when possible, using primitive arrays is always
+ * a better choice in terms of performance.
  *    
  * @author hongyanli
  *
@@ -68,11 +72,11 @@ public class CriticalConnections2 {
 
 	public static List<List<Integer>> findCriticalConnections(int noOfServers, int noOfConnections,
 			List<List<Integer>> connections) {
-		final Map<Integer, List<Integer>> adjacencyLists = buildAdjacencyLists(noOfServers, connections);
+		final List<Integer>[] adjacencyLists = buildAdjacencyLists(noOfServers, connections);
 		// We will use the parentMap combined with the visited map to find the cycles
 		// and mark the nodes
 		// in cycle, thus any node not marked as in a cycle are critical.
-		Map<Integer, Integer> parentMap = new HashMap<>();
+		int[] parentMap = new int[noOfServers];
 		// we use a map to store the visited. If the value is 1, it denotes the node is
 		// visited. If the value
 		// is 0, it indicate that the node is done visiting. And at last, when we found
@@ -80,16 +84,16 @@ public class CriticalConnections2 {
 		// value to 2, and thus at the end, all nodes that have visited value equal to 0
 		// are the ones that are
 		// critical.
-		final Map<Integer, Integer> arrivalTime = new HashMap<>(); // also function as visited Map
-		final Map<Integer, Integer> lowestTime = new HashMap<>();
+		final int[] arrivalTime = new int[noOfServers]; // also function as visited Map
+		final int[] lowestTime = new int[noOfServers];
 		final List<List<Integer>> result = new ArrayList<>();
 
 		for (int i = 0; i < noOfServers; i++) {
-			if (arrivalTime.get(i)!=null) {
+			if (arrivalTime[i]!=0) {
 				continue;
 			}
 
-			visit(i, adjacencyLists, parentMap, lowestTime, arrivalTime, 0, result);
+			visit(i, adjacencyLists, parentMap, lowestTime, arrivalTime, 1, result);
 		}
 
 		if(result.size()==0) {
@@ -98,33 +102,36 @@ public class CriticalConnections2 {
 		return result;
 	}
 
-	private static Map<Integer, List<Integer>> buildAdjacencyLists(int mapCapacity, List<List<Integer>> connections) {
-		final Map<Integer, List<Integer>> result = new HashMap<Integer, List<Integer>>(mapCapacity);
+	private static List<Integer>[] buildAdjacencyLists(int mapCapacity, List<List<Integer>> connections) {
+		@SuppressWarnings("unchecked")
+		final List<Integer>[] result = new ArrayList[mapCapacity];
+		for(int k=0; k< mapCapacity; k++) {
+			result[k] = new ArrayList<>();
+		}
 		connections.forEach(l -> {
-			getList(result, l.get(0)).add(l.get(1));
-			getList(result, l.get(1)).add(l.get(0));
+			result[l.get(0)].add(l.get(1));
+			result[l.get(1)].add(l.get(0));
 		});
 		return result;
 	}
 
-	private static void visit(Integer u, Map<Integer, List<Integer>> adjLists, Map<Integer, Integer> parentMap, 
-			Map<Integer, Integer> lowestTime, Map<Integer, Integer> arrivalTime, int time, List<List<Integer>> critical) {
+	private static void visit(Integer u, List<Integer>[] adjLists, int[] parentMap, 
+			int[] lowestTime, int[] arrivalTime, int time, List<List<Integer>> critical) {
 
 		// we only visit the nodes that we have not yet visited
-		List<Integer> children = adjLists.get(u);
-		arrivalTime.put(u, time); // also function as visited Map
-		lowestTime.put(u, time);
-		if (children != null) {
-			for(Integer v : children) {
-				if (arrivalTime.get(v)==null) {
-					parentMap.put(v, u);
+		arrivalTime[u]=time; // also function as visited Map
+		lowestTime[u]=time;
+		if (adjLists[u] != null) {
+			for(Integer v : adjLists[u]) {
+				if (arrivalTime[v]==0) {
+					parentMap[v]=u;
 					visit(v, adjLists, parentMap, lowestTime, arrivalTime, time + 1, critical);
-					lowestTime.put(u, Math.min(lowestTime.get(v), lowestTime.get(u)));
-					if(lowestTime.get(v) > arrivalTime.get(u)) {
+					lowestTime[u]=Math.min(lowestTime[v], lowestTime[u]);
+					if(lowestTime[v] > arrivalTime[u]) {
 						addConnection(critical, u, v);
 					}
-				} else if (!v.equals(parentMap.get(u))) {
-					lowestTime.put(u, Math.min(lowestTime.get(v), lowestTime.get(u)));
+				} else if (v!=parentMap[u]) {
+					lowestTime[u]=Math.min(lowestTime[v], lowestTime[u]);
 				}
 			}
 		}
@@ -136,13 +143,4 @@ public class CriticalConnections2 {
 		edge.add(v);
 		critical.add(edge);
 	}
-
-	private static List<Integer> getList(Map<Integer, List<Integer>> result, Integer key) {
-		List<Integer> l = result.getOrDefault(key, new ArrayList<Integer>());
-		if (l.size() == 0) {
-			result.put(key, l);
-		}
-		return l;
-	}
-
 }
