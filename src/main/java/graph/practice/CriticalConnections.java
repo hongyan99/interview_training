@@ -20,6 +20,10 @@ import java.util.Map;
  * Note: In case of no critical connection found then return a 2D array with single row containing two 
  * elements having value -1 i.e. [[-1, -1]].
  * 
+ * This is my own implementation idea which is apparently NOT as good as the academic implementation
+ * in CriticalConnections2.java The idea is very close, except that my method takes more memory and 
+ * is slightly slower.
+ * 
  * @author hongyanli
  *
  */
