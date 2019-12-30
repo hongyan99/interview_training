@@ -27,6 +27,11 @@ public class SnakeAndLadders {
 		System.out.println(minNumberOfRolls(13, Arrays.asList(moves)));
 		moves = new Integer[] {-1};
 		System.out.println(minNumberOfRolls(1, Arrays.asList(moves)));
+		moves = new Integer[] {-1,-1,-1,-1,36,-1,-1,-1,-1,-1,-1,28,-1,-1,-1,-1,32,-1,
+			-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,37,-1,
+			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,9,-1,-1,-1,-1,-1,-1,
+			-1,-1,-1,44,-1};
+		System.out.println(minNumberOfRolls(59, Arrays.asList(moves)));
 	}
 	
 	private static int minNumberOfRolls(int n, List<Integer> moves) {
@@ -37,22 +42,22 @@ public class SnakeAndLadders {
 		if(n==1) {
 			return 0;
 		}
-		List<Node> queue = new ArrayList<>();
-		queue.add(new Node(0, 0));
+		List<int[]> queue = new ArrayList<>();
+		queue.add(new int[] {0, 0});
 		final boolean[] visited = new boolean[n];
 		
 		while (!queue.isEmpty()) {
-			Node node = queue.remove(0);
-			if(visited[node.val]) {
+			int[] node = queue.remove(0);
+			if(visited[node[0]]) {
 				continue;
 			}
-			visited[node.val]=true;
-			List<Node> adjList = calcAdjList(node, moves, n);
+			visited[node[0]]=true;
+			List<int[]> adjList = calcAdjList(node, moves, n);
 			if(adjList.isEmpty()) {
-				return node.depth+1;
+				return node[1]+1;
 			}
 			adjList.forEach(c-> {
-				if(!visited[c.val]) {
+				if(!visited[c[0]]) {
 					queue.add(c);
 				}
 			});
@@ -60,31 +65,22 @@ public class SnakeAndLadders {
 		return -1;
     }
 
-	private static List<Node> calcAdjList(Node node, List<Integer> moves, int n) {
-		List<Node> returns = new ArrayList<>();
+	private static List<int[]> calcAdjList(int[] node, List<Integer> moves, int n) {
+		List<int[]> returns = new ArrayList<>();
 		for (int i = 1; i < 7; i++) {
-			int index = node.val+i;
+			int index = node[0]+i;
 			if(index == n-1) {
 				return Collections.emptyList();
 			}
 			int nextIndex = moves.get(index);
 			if(nextIndex==-1) {
-				returns.add(new Node(index, node.depth+1));
+				returns.add(new int[] {index, node[1]+1});
 			} else if (nextIndex == n-1) {
 				return Collections.emptyList();
 			} else if (nextIndex < n-1) {
-				returns.add(new Node(nextIndex, node.depth+1));
+				returns.add(new int[] {nextIndex, node[1]+1});
 			}
 		}
 		return returns;
-	}
-	
-	private static class Node {
-		final int val;
-		final int depth;
-		public Node(int val, int depth) {
-			this.val = val;
-			this.depth = depth;
-		}
 	}
 }
