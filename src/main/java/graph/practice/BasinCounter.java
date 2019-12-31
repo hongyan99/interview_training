@@ -8,6 +8,20 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
+/**
+ * You are given a matrix where each number represents altitude of that cell, such that, 
+ * water flows towards lower altitudes. If a cell’s four neighboring cells all have higher 
+ * altitudes, we call this cell a sink; water collects in sinks.  Otherwise, water will 
+ * flow to the neighboring cell with the lowest altitude. If a cell is not a sink, 
+ * you may assume it has a unique lowest neighbor and that this will be lower than the cell.  
+ * 
+ * Cells that drain into the same sink – directly or indirectly – are said to be part of 
+ * the same basin. Your challenge is to partition the map into basins. Your code should 
+ * output the sizes of the basins, in non-decreasing order.
+ * 
+ * @author Hongyan
+ *
+ */
 public class BasinCounter {
 	public static void main(String[] args) {
 		List<List<Integer>> matrix = new ArrayList<>();

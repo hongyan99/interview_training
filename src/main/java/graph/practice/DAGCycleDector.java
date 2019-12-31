@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+/**
+ * Given a directed graph, find out whether it includes a cycle.
+ * 
+ * @author Hongyan
+ *
+ */
 public class DAGCycleDector {
 	public static void main(String[] args) {
 		List<List<Integer>> edges = createEdges(
