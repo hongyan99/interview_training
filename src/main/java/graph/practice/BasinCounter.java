@@ -45,14 +45,14 @@ public class BasinCounter {
 		// 3. Do a BFS or DFS on the sorted graph and count the number of connected graphs
 		Map<Integer, List<Integer>> adjLists = buildAdjLists(matrix);
 
-		int width = matrix.size();
-		int height = width==0? 0 : matrix.get(0).size();
-		boolean[] visited = new boolean[width*height];
+		int rows = matrix.size();
+		int cols = rows==0? 0 : matrix.get(0).size();
+		boolean[] visited = new boolean[rows*cols];
 		Stack<Integer> sorted = new Stack<>();
 		
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
-				Integer key = i*height+j;
+		for(int i = 0; i < rows; i++) {
+			for(int j = 0; j < cols; j++) {
+				Integer key = i*cols+j;
 				if(!visited[key]) {
 					Stack<Integer> stack = new Stack<>();
 					stack.push(key);
@@ -61,7 +61,7 @@ public class BasinCounter {
 			}
 		}
 		final List<Integer> counts = new ArrayList<>();
-		visited = new boolean[width*height];
+		visited = new boolean[rows*cols];
 		while(!sorted.isEmpty()) {
 			Integer key = sorted.pop();
 			if(visited[key]) {
@@ -121,11 +121,11 @@ public class BasinCounter {
 	}
 
 	private static Map<Integer, List<Integer>> buildAdjLists(List<List<Integer>> matrix) {
-		int width = matrix.size();
-		int height = width==0? 0 : matrix.get(0).size();
+		int rows = matrix.size();
+		int cols = rows==0? 0 : matrix.get(0).size();
 		Map<Integer, List<Integer>> returns = new HashMap<>();
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
+		for(int i = 0; i < rows; i++) {
+			for(int j = 0; j < cols; j++) {
 				int minI = i;
 				int minJ = j;
 				int min = matrix.get(i).get(j);
@@ -134,7 +134,7 @@ public class BasinCounter {
 					minI = i-1;
 					minJ = j;
 				}
-				if(i+1 < width && matrix.get(i+1).get(j) < min) {
+				if(i+1 < rows && matrix.get(i+1).get(j) < min) {
 					min = matrix.get(i+1).get(j);
 					minI = i+1;
 					minJ = j;
@@ -144,7 +144,7 @@ public class BasinCounter {
 					minI = i;
 					minJ = j-1;
 				}
-				if(j+1 < height && matrix.get(i).get(j+1) < min) {
+				if(j+1 < cols && matrix.get(i).get(j+1) < min) {
 					min = matrix.get(i).get(j+1);
 					minI = i;
 					minJ = j+1;
@@ -152,8 +152,8 @@ public class BasinCounter {
 				if(minI==i && minJ==j) {
 					continue;
 				} else {
-					Integer key = minI*height+minJ;
-					Integer value = i*height+j;
+					Integer key = minI*cols+minJ;
+					Integer value = i*cols+j;
 					List<Integer> list = returns.get(key);
 					if(list==null) {
 						list = new ArrayList<>();
