@@ -42,8 +42,10 @@ public class ShortestDistance {
     public static List<List<Integer>> find_shortest_distance_from_a_guard(List<List<Character>> grid) {
     	// Algorithm:
     	// This is really a multi-graph problem, and each graph start from a guard (a 'G' node).
-    	// no topological sorting is needed. Just start a different BFS from each 'G' node, and 
-    	// update distance as we move forward.
+    	// no topological sorting is needed. Just do a BFS with all 'G' node in the Queue to start with.
+    	// Since all edges have the same weight, unlike in the LongestPath.java where we have to 
+    	// compare distances from different paths, here we just need to do a simple BFS and no need to
+    	// do a topological sort and we still get a O(n*m) complexity.
     	
     	// Get all zero-in-degree nodes and sort the graph
     	// ONE DISCOVERY WITH THIS EXERCISE: Using LinkedList instead of ArrayList sped up some 
@@ -66,7 +68,8 @@ public class ShortestDistance {
     	return dist;
     }
 
-	private static void calculateShotestPaths(Queue<int[]> queue, List<List<Character>> grid, List<List<Integer>> dists, int rows, int cols) {
+	private static void calculateShotestPaths(Queue<int[]> queue, 
+			List<List<Character>> grid, List<List<Integer>> dists, int rows, int cols) {
 		boolean[][] visited = new boolean[rows][cols];
 		while(!queue.isEmpty()) {
 			int[] node = queue.poll();
