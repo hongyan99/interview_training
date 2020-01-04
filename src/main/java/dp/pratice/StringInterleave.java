@@ -27,26 +27,26 @@ public class StringInterleave {
     		return false;
     	}
     	BitSet[][] failed = new BitSet[a.length()+1][b.length()+1];
-		return isInterleave(a.toCharArray(), 0, b.toCharArray(), 0, i.toCharArray(), 0, failed);
+		return isInterleave(a, 0, b, 0, i, 0, failed);
     }
     
-    private static boolean isInterleave(char[] a, int x, char[] b, int y, char[] i, int z, BitSet[][] failed) {
-    	if(x==a.length && y==b.length && z==i.length) {
+    private static boolean isInterleave(String a, int x, String b, int y, String i, int z, BitSet[][] failed) {
+    	if(x==a.length() && y==b.length() && z==i.length()) {
     		return true;
     	}
     	if(failed[x][y]!=null && failed[x][y].get(z)) {
     		return false;
     	}
-    	if(x<a.length && z<i.length && a[x]==i[z]) {
+    	if(x<a.length() && z<i.length() && a.charAt(x)==i.charAt(z)) {
     		boolean returns = isInterleave(a, x+1, b, y, i, z+1, failed);
     		if(returns==true) return true;
-    		get(failed, x+1, y, i.length).set(z+1);
+    		get(failed, x+1, y, i.length()).set(z+1);
     	}
     	
-    	if(y<b.length && z<i.length && b[y]==i[z]) {
+    	if(y<b.length() && z<i.length() && b.charAt(y)==i.charAt(z)) {
     		boolean returns = isInterleave(a, x, b, y+1, i, z+1, failed);
     		if(returns==true) return true;
-    		get(failed, x, y+1, i.length).set(z+1);
+    		get(failed, x, y+1, i.length()).set(z+1);
     	}
     	return false;
     }
