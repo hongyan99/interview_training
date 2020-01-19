@@ -22,6 +22,9 @@ public class EqualSubSetPartition2 {
 		}
 		long hSum = sum/2;
 		if(sum % 2 == 0) {
+			//The idea is to store all calculated values in a map. The values are BitSets 
+			//that indicates which values are included in the calculation. Short circuit
+			//whenever we get a match to the half sum.
 			Map<Long, BitSet> values = new HashMap<>();
 			Map<Long, BitSet> valuesNew = new HashMap<>();
 			values.put(0L, new BitSet(s.size()));
