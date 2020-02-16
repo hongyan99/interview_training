@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
 
-import sorting.practice.ArrayMerger;
+import sorting.practice.mergekarrays.ArrayMerger;
 
 /**
  * Problem: <p/>

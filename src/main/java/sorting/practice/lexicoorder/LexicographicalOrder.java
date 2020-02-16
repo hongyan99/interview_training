@@ -1,4 +1,4 @@
-package sorting.practice;
+package sorting.practice.lexicoorder;
 
 import java.util.Arrays;
 import java.util.HashMap;

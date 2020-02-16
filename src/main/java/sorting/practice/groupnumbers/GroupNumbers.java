@@ -1,4 +1,4 @@
-package sorting.practice;
+package sorting.practice.groupnumbers;
 
 import java.util.Arrays;
 
@@ -15,10 +15,13 @@ public class GroupNumbers {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i]%2!=0) {
 				if(index==-1) {
+					// this finds the index of the first odd number
 					index = i;
 				}
 			} else {
 				if(index!=-1) {
+					// whenever we find a even number, if there is an 
+					// odd number before it, swap with it;
 					int temp = arr[index];
 					arr[index] = arr[i];
 					arr[i] = temp;

@@ -1,4 +1,4 @@
-package sorting.practice;
+package sorting.practice.mergekarrays;
 
 import java.util.Arrays;
 

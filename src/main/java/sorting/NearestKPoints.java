@@ -65,14 +65,6 @@ public class NearestKPoints {
     		this.y = y;
     	}
     	
-    	public int hashCode() {
-    		return distance.hashCode();
-    	}
-    	
-    	public boolean equals(Object other) {
-    		return other==null? false : (other instanceof Node? distance.equals(((Node)other).distance) : false); 
-    	}
-    	
     	public List<Integer> getPoint() {
     		List<Integer> returns = new ArrayList<>();
     		returns.add(x);
