@@ -9,6 +9,13 @@ import java.util.PriorityQueue;
  * Given a point p, and other n points in two-dimensional space, find k points out 
  * of n points which are nearest to p.
  * 
+ * The algorithm:
+ * For make a priority queue of Nodes. Each Node is for one point and encapsulate in it
+ * the logic to calculate the distance of the point relative to the origin (x0, y0).
+ * If we make a priority queue a min heap, and limit the side to K nodes. Then adding
+ * all nodes to the queue, result give us the largest K nodes. Fetch the nodes from
+ * queue gives us the result ordered by distance.
+ * 
  * @author Hongyan
  *
  */
