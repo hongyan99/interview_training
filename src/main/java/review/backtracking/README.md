@@ -7,10 +7,9 @@ erase the board, and then try repeat the same process with the next possibility.
 
 ```
 void solve(level, board, result):
-    if(row==board.size()) board.store(result)
+    if(board.isDone(level)) board.store(result)
     for each choice:
-	    if board.isValid(level, choice):
-	        board.set(level, choice)
-	        solve(level+1, board, result)
-	        board.unSet(level, choice)
+        board.set(level, choice)
+        solve(level+1, board, result)
+        board.unSet(level, choice)
 ```

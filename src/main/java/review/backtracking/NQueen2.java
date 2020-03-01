@@ -3,6 +3,7 @@ package review.backtracking;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class NQueen2 {
 	public static void main(String[] args) {
@@ -21,7 +22,7 @@ public class NQueen2 {
 		// This is a backtracking problem.
 		// All backtracking problems follow this pattern
 		// void solve(level, board, result):
-		//    if(row==board.size()) board.store(result)
+		//    if(board.isDone(level)) board.store(result)
 		//    for each choice:
 		//	    if board.isValid(level, choice):
 		//	        board.set(level, choice)
@@ -45,17 +46,20 @@ public class NQueen2 {
 	}
 	
 	private static void solve(int row, Board board, List<String[]> result) {
-		if(row==board.getDim()) {
+		// Are we done with the board
+		if(board.isDone(row)) {
 			board.store(result);
 			return;
 		}
-		for(int col = 0; col < board.getDim(); col++) {
+		
+		// for each choice at the current row
+		board.forEach(col-> {
 			if(board.isValid(row, col)) {
 				board.set(row, col);
 				solve(row+1, board, result);
 				board.unset(row, col);
 			}
-		}
+		});
 	}
 
 	private static class Board {
@@ -95,6 +99,10 @@ public class NQueen2 {
 			takenF[dim+row-col] = flag;
 		}
 		
+		boolean isDone(int row) {
+			return row==dim;
+		}
+		
 		void store(List<String[]> result) {
 			if(isValidBoard()) {
 				String[] rows = new String[board.length];
@@ -105,8 +113,10 @@ public class NQueen2 {
 			}
 		}
 		
-		int getDim() {
-			return dim;
+		void forEach(Consumer<Integer> handler) {
+			for(int col = 0; col < dim; col++) {
+				handler.accept(col);
+			}
 		}
 		
 		boolean isValidBoard() {
