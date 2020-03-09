@@ -23,11 +23,10 @@ public class NQueen2 {
 		// All backtracking problems follow this pattern
 		// void solve(level, board, result):
 		//    if(board.isDone(level)) board.store(result)
-		//    for each choice:
-		//	    if board.isValid(level, choice):
-		//	        board.set(level, choice)
-		//	        solve(level+1, board, result)
-		//	        board.unSet(level, choice)
+		//    for each valid choice:
+		//    	board.set(level, choice)
+		//     	solve(level+1, board, result)
+		//     	board.unSet(level, choice)
 		
 		// Here level is the row, and choice is the column
 		

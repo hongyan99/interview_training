@@ -8,8 +8,10 @@ erase the board, and then try repeat the same process with the next possibility.
 ```
 void solve(level, board, result):
     if(board.isDone(level)) board.store(result)
-    for each choice:
+    for each valid choice:
         board.set(level, choice)
         solve(level+1, board, result)
         board.unSet(level, choice)
 ```
+
+Note that depends on the problem, the unSet step might not even needed
