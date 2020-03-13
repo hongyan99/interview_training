@@ -57,4 +57,6 @@ public interface Bucket<N> {
 			recurse.accept(node);
 		});
 	}
+	
+	void clear();
 }

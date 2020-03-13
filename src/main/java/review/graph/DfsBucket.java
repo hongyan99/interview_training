@@ -1,5 +1,6 @@
 package review.graph;
 
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -37,5 +38,11 @@ public class DfsBucket implements Bucket<Integer> {
 		discovered[node] = true;
 		// add vertex into the stack
 		processor.accept(node);
+	}
+
+	@Override
+	public void clear() {
+		Arrays.fill(discovered, false);
+		stack.clear();
 	}
 }

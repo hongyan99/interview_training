@@ -27,17 +27,17 @@ public class IterativeDfs {
 		);
 
 		// Set number of vertices in the graph (0-12)
-		final int N = 13;
+		final int n = 13;
 
 		// create a graph from edges
-		Graph graph = new Graph(edges, N);
+		Graph graph = new Graph(edges, n);
 
 		// stores vertex is discovered or not
-		Bucket<Integer> bucket = new DfsBucket(N);
+		Bucket<Integer> bucket = new DfsBucket(n);
 
 		// Do iterative DFS traversal from all undiscovered nodes to
 		// cover all unconnected components of graph
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			if (bucket.add(i)) {
 				// start DFS traversal from vertex i
 				dfs(graph, bucket);

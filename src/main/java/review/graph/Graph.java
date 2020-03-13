@@ -8,10 +8,10 @@ public class Graph {
 	private List<List<Integer>> adjList = null;
 
 	// Constructor
-	public Graph(List<Edge> edges, int N) {
-		adjList = new ArrayList<>(N);
+	public Graph(List<Edge> edges, int n) {
+		adjList = new ArrayList<>(n);
 
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			adjList.add(i, new ArrayList<>());
 		}
 

@@ -1,6 +1,7 @@
 package review.graph;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.function.Consumer;
 
@@ -38,5 +39,11 @@ public class BfsBucket implements Bucket<Integer> {
 	public void offer(Consumer<Integer> processor) {
 		int node = q.poll();
 		processor.accept(node);
+	}
+
+	@Override
+	public void clear() {
+		Arrays.fill(discovered, false);
+		q.clear();
 	}
 }

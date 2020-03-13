@@ -26,17 +26,17 @@ class RecursiveBfs {
 		);
 
 		// Set number of vertices in the graph
-		final int N = 15;
+		final int n = 15;
 
 		// create a graph from edges
-		Graph graph = new Graph(edges, N);
+		Graph graph = new Graph(edges, n);
 
 		// stores vertex is discovered or not
-		Bucket<Integer> bucket = new BfsBucket(N);
+		Bucket<Integer> bucket = new BfsBucket(n);
 
 		// Do BFS traversal from all undiscovered nodes to
 		// cover all unconnected components of graph
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			if (bucket.add(i)) {
 				// start BFS traversal from vertex i
 				bfs(graph, bucket);
