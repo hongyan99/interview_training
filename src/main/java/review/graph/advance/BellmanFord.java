@@ -8,7 +8,6 @@ import review.graph.DfsBucket;
 
 public class BellmanFord {
 	public static void main(String[] args) {
-		// List of graph edges as per above diagram
 		List<Edge> edges = Arrays.asList(
 			new Edge(0, 6, 2), new Edge(1, 2, -4),
 			new Edge(1, 4, 1), new Edge(1, 6, 8),
@@ -18,32 +17,38 @@ public class BellmanFord {
 			new Edge(7, 5, -4)
 		);
 
-		// Set number of vertices in the graph
 		final int n = 8;
-
-		// create a graph from given edges
 		Graph graph = new Graph(edges, n);
-
-		// source vertex
 		int source = 7;
 		
 		System.out.println(Arrays.toString(findShortestPath(graph, source, n)));
 	}
 
 	private static int[] findShortestPath(Graph graph, int source, int size) {
+		// 1) Initialize the shortest distance for each node.
 		final int distances[] = new int[size];
 		for(int i = 0; i < size; i++) {
 			distances[i] = Integer.MAX_VALUE;
 		}
 		distances[source] = 0;
 		
+		// 2) Creates the DFS bucket
 		DfsBucket bucket = new DfsBucket(size);
+		
+		// 3) Loop size-1 times
 		for(int k = 0; k < size-1; k++) {
+			// 3.1) Start from the source node
 			bucket.add(7);
+			// 3.2) Traverse using the DFS bucket
 			while (!bucket.isEmpty()) {
+				// 3.3) For each node in the bucket
 				bucket.offer(s -> {
-					// do for every edge (v -> u)
 					for (Edge e : graph.getAdjList().get(s)) {
+						// 3.4) Optimize the distance. 
+						// One optimization we can do here is: check that whether 
+						// there is any update to the distances array, if not for
+						// all nodes, we can short-circuit and exit the loop.
+						// I did not do it here to avoid cluttering of the code.
 						distances[e.getDest()] = Math.min(
 							distances[e.getDest()], 
 							distances[s]+e.getWeight()
@@ -52,6 +57,7 @@ public class BellmanFord {
 					}
 				});
 			}
+			// 3.5) Clear the bucket for the next iteration
 			bucket.clear();
 		}
 		
