@@ -46,6 +46,7 @@ public interface Bucket<N> {
 	
 	default void recurse(
 			Consumer<N> processor, AdjacencyList<N> adjList, Consumer<N> recurse) {
+		// exit condition
 		if (isEmpty()) return;
 
 		// pop front node from queue and print it

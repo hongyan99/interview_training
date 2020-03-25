@@ -24,12 +24,9 @@ public class BellmanFord {
 		System.out.println(Arrays.toString(findShortestPath(graph, source, n)));
 	}
 
-	private static int[] findShortestPath(Graph graph, int source, int size) {
+	private static Integer[] findShortestPath(Graph graph, int source, int size) {
 		// 1) Initialize the shortest distance for each node.
-		final int distances[] = new int[size];
-		for(int i = 0; i < size; i++) {
-			distances[i] = Integer.MAX_VALUE;
-		}
+		final Integer distances[] = new Integer[size];
 		distances[source] = 0;
 		
 		// 2) Creates the DFS bucket
@@ -44,11 +41,16 @@ public class BellmanFord {
 				// 3.3) For each node in the bucket
 				bucket.offer(s -> {
 					for (Edge e : graph.getAdjList().get(s)) {
-						// 3.4) Optimize the distance. 
-						// One optimization we can do here is: check that whether 
-						// there is any update to the distances array, if not for
-						// all nodes, we can short-circuit and exit the loop.
-						// I did not do it here to avoid cluttering of the code.
+						// 3.4) Skip if we have not even reach the source.
+						if(distances[s]==null) {
+							continue;
+						}
+						// 3.5) Optimize the distance: propagate from the source to 
+						// the destination. One optimization we can do here is: 
+						// check that whether. There is any update to the distances 
+						// array, if not for all nodes, we can short-circuit and exit 
+						// the loop. I did not do it here to avoid cluttering of the 
+						// code.
 						distances[e.getDest()] = Math.min(
 							distances[e.getDest()], 
 							distances[s]+e.getWeight()
@@ -57,7 +59,7 @@ public class BellmanFord {
 					}
 				});
 			}
-			// 3.5) Clear the bucket for the next iteration
+			// 3.6) Clear the bucket for the next iteration
 			bucket.clear();
 		}
 		

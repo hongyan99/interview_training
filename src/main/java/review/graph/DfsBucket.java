@@ -5,7 +5,7 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 // create a bucket used to do DFS
-// the differences from DFS are
+// the differences from BFS are
 // 1) here we use Stack but in BFS we use Queue
 // 2) we mark the node as discovered as we process it
 // Both are adding the node into the bucket if it is never discovered

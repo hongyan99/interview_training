@@ -22,11 +22,14 @@ public class ParencesePairs {
 			for(int k = count; k<chars.length; k++) {
 				chars[k]=')';
 			}
+			// This is very important, since we
+			// "freeze" the result into the result array and thus, 
+			// subsequent tries can use chars array freely.
 			result.add(new String(chars));
 			return;
 		}
 
-		// since we keep track of the index of the array (count), there is not need to unset.
+		// since we keep track of the index of the array (count), there is no need to unset.
 		chars[count] = '(';
 		solve(left-1, right, count+1, chars, result);
 		if(left<right) {
