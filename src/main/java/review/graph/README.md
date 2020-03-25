@@ -13,7 +13,7 @@ void traverse(source):
 ```
 
 |         Algorithm         |                  Policy               |     Search Tree   |
------------------------------------------------------------------------------------------
+|---------------------------|---------------------------------------|-------------------|
 | 1. Breadth-first			| Choose which was seen first			| BFS				|
 | 2. Depth-first			| Choose which was seen last			| DFS				|
 | 3. Dijkstra's				| Choose which with minimum RHS label	| Shortest path		|
