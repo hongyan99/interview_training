@@ -46,9 +46,9 @@ void bfs(s):
 
 ## DFS: Depth-first-search
 
-### Using loop
-
 Complexity = O(m+n), where m is the number of edges and n nodes.
+
+### Using loop
 
 ```
 void dfs(s):
