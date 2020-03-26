@@ -6,8 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 //data structure to store graph edges
-class Edge
-{
+class Edge {
 	int source, dest;
 
 	public Edge(int source, int dest) {
@@ -48,6 +47,7 @@ class Graph {
 	}
 
 }
+
 class TopologicalSort {
 	// Pattern of back tracking here
 	// 0. outer loop
@@ -56,10 +56,9 @@ class TopologicalSort {
 	// 3. un-update state after recursion (back-track)
 	// 4. end of outer loop
 	// 5. collect result (print result here)
-	
+
 	// Recursive function to find all topological orderings of a given DAG
-	public static void findAllTopologicalOrders(Graph graph, List<Integer> path,
-												boolean[] discovered, int n) {
+	public static void findAllTopologicalOrders(Graph graph, List<Integer> path, boolean[] discovered, int n) {
 		// 0. outer loop
 		// do for every vertex
 		for (int v = 0; v < n; v++) {
@@ -68,7 +67,7 @@ class TopologicalSort {
 			if (graph.indegree.get(v) == 0 && !discovered[v]) {
 				// 1. update state before recursion
 				// for every adjacent vertex u of v, reduce in-degree of u by 1
-				for (int u: graph.adjList.get(v)) {
+				for (int u : graph.adjList.get(v)) {
 					graph.indegree.set(u, graph.indegree.get(u) - 1);
 				}
 
@@ -82,7 +81,7 @@ class TopologicalSort {
 
 				// 3. un-update state after recursion (back-track)
 				// backtrack: reset in-degree information for the current node
-				for (int u: graph.adjList.get(v)) {
+				for (int u : graph.adjList.get(v)) {
 					graph.indegree.set(u, graph.indegree.get(u) + 1);
 				}
 
@@ -102,8 +101,7 @@ class TopologicalSort {
 	}
 
 	// Print all topological orderings of a given DAG
-	public static void printAllTopologicalOrders(Graph graph)
-	{
+	public static void printAllTopologicalOrders(Graph graph) {
 		// get number of nodes in the graph
 		int N = graph.adjList.size();
 
@@ -117,16 +115,10 @@ class TopologicalSort {
 		findAllTopologicalOrders(graph, path, discovered, N);
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		// List of graph edges as per above diagram
-		List<Edge> edges = Arrays.asList(
-			new Edge(0, 6), new Edge(1, 2),
-			new Edge(1, 4), new Edge(1, 6),
-			new Edge(3, 0), new Edge(3, 4),
-			new Edge(5, 1), new Edge(7, 0),
-			new Edge(7, 1)
-		);
+		List<Edge> edges = Arrays.asList(new Edge(0, 6), new Edge(1, 2), new Edge(1, 4), new Edge(1, 6), new Edge(3, 0),
+				new Edge(3, 4), new Edge(5, 1), new Edge(7, 0), new Edge(7, 1));
 
 		// Number of nodes in the graph
 		int n = 8;
