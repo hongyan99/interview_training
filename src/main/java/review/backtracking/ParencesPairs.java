@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ParencesePairs {
+public class ParencesPairs {
 	public static void main(String[] args) {
 		String[] result = pair(4);
 		System.out.println(Arrays.toString(result));

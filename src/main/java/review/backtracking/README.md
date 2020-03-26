@@ -15,3 +15,11 @@ void solve(level, board, result):
 ```
 
 Note that depends on the problem, the unSet step might not even needed
+
+List of problems using the backtracking method:
+
+* [TopologicalSort](../graph/topologicalsort/TopologicalSort.java)
+* [NQueen](NQueen2.java)
+* [KnightsTour](KnightsTour.java)
+* [ParencesPairs](ParencesPairs.java)
+* [BinarySearchTreeCounter](BinarySearchTreeCounter.java)

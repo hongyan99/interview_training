@@ -6,9 +6,11 @@ import java.util.List;
 public class Graph {
 	// A List of Lists to represent an adjacency list
 	private List<List<Integer>> adjList = null;
+	private int[] indegree;
 
 	// Constructor
 	public Graph(List<Edge> edges, int n) {
+		indegree = new int[n];
 		adjList = new ArrayList<>(n);
 
 		for (int i = 0; i < n; i++) {
@@ -22,10 +24,19 @@ public class Graph {
 
 			adjList.get(src).add(dest);
 			adjList.get(dest).add(src);
+			indegree[dest] += 1;
 		}
 	}
 	
 	public List<List<Integer>> getAdjList() {
 		return adjList;
+	}
+	
+	public int getIndegree(int node) {
+		return indegree[node];
+	}
+	
+	public int getSize() {
+		return indegree.length;
 	}
 }

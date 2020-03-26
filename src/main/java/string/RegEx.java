@@ -15,11 +15,9 @@ public class RegEx {
 	
 	private abstract static class Matcher {
 		protected final Matcher next;
-		protected final String pattern;
 		
 		abstract boolean match(String text, int pos);
-		protected Matcher(String pattern) {
-			this.pattern = pattern;
+		protected Matcher(final String pattern) {
 			if(pattern==null) {
 				this.next = null;
 			} else if (pattern.length()==0) {
