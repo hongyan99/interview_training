@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ParencesPairs {
+public class ParenthesesPairs {
 	public static void main(String[] args) {
 		String[] result = pair(4);
 		System.out.println(Arrays.toString(result));
@@ -17,9 +17,9 @@ public class ParencesPairs {
 		return result.toArray(returns);
 	}
 
-	private static void solve(int left, int right, int count, char[] chars, List<String> result) {
+	private static void solve(int left, int right, int pointer, char[] chars, List<String> result) {
 		if(left==0) {
-			for(int k = count; k<chars.length; k++) {
+			for(int k = pointer; k<chars.length; k++) {
 				chars[k]=')';
 			}
 			// This is very important, since we
@@ -29,12 +29,12 @@ public class ParencesPairs {
 			return;
 		}
 
-		// since we keep track of the index of the array (count), there is no need to unset.
-		chars[count] = '(';
-		solve(left-1, right, count+1, chars, result);
+		// since we keep track of the index of the array (pointer), there is no need to unset.
+		chars[pointer] = '(';
+		solve(left-1, right, pointer+1, chars, result);
 		if(left<right) {
-			chars[count] = ')';
-			solve(left, right-1, count+1, chars, result);
+			chars[pointer] = ')';
+			solve(left, right-1, pointer+1, chars, result);
 		}
 	}
 }
