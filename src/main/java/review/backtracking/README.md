@@ -20,10 +20,22 @@ void solve(level, board, result):
         solve(level+1, board, result)
         board.unSet(level, choice) // conditional
     	// 2.3. revert/unset the solution board so to try out the next choice
-```
+```  
 
 ## Discussions
+The backtracking algorithm pattern covers a broad ranges of problems. The pattern is 
+simple but the actual implementations vary a lot from problem to problem and thus it is 
+easy for one to get overwhelmed. In order to master this pattern, it is import to study 
+the differences by applying the pattern to the various problems, compare the differences
+in the implementations so that in practice, a solution can be relatively easily attained
+with the proper structure.
+
+Here, what we are trying to achieve is NOT something that is the most concise or clever, 
+but rather, it is a well defined structure that can be easily applied to new problems 
+that can be solved by this approach. 
+
 In this algorithm pattern, the key points to consider are:
+
 * The *solution board*. A solution board should keep the state of the on-going solution, 
 and it should also keep the variables that allow you to determine whether you have found 
 a solution. And finally, you should be able to extract the solutions found. In the case
@@ -33,7 +45,7 @@ as soon as you find one. *Spend enough time on defining the board is the key her
 be a limited number of choices to proceed to the next level. Encapsulate inside the board
 the logic to find the choices can help simplify the solution and making it easy to 
 understand the implementation, and thus making it easier to implement and not getting
-yourself confused.
+yourself lost.
 * The *exit condition*. This can vary depends on what is asked for. For example for the 
 KnightsTour problem it means that there are no more places on the board to place the 
 next knight. *One important characteristics of this algorithm is that you populate the*
