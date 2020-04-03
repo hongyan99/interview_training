@@ -31,7 +31,7 @@ public class EqualSubSetPartition2 {
 		for(int i = 0; i < s.size(); i++) {
 			sum += s.get(i);
 		}
-		long hSum = sum/2;
+		Long hSum = sum/2;
 		if(sum % 2 == 0) {
 			//The idea is to loop through the list of numbers in one path, calculate 
 			//cumulatively the sum of the numbers by either include or exclude the 
@@ -46,32 +46,40 @@ public class EqualSubSetPartition2 {
 			
 			//Our DP table: stores the result of each iteration. 
 			Map<Long, BitSet> values = new HashMap<>();
-			Map<Long, BitSet> valuesNew = new HashMap<>();
-			values.put(0L, new BitSet(s.size()));
-			for(int i = 0; i < s.size(); i++) {
-				for(Long k : values.keySet()) {
-					BitSet bs = values.get(k);
-					BitSet bs1 = new BitSet(s.size());
-					bs1.or(bs);
-					bs1.set(i);
-					Long newK = k + s.get(i);
-					valuesNew.put(newK, bs1);
-					valuesNew.put(k, bs);
-					if(newK==hSum) {
-						if(bs1.cardinality()==s.size()) {
-							return Collections.emptyList();
+			BitSet bs = new BitSet(s.size());
+			bs.set(0);
+			values.put(0L+s.get(0), bs);
+			start: {
+				Map<Long, BitSet> valuesNew = new HashMap<>(values);
+				for(int i = 0; i < s.size(); i++) {
+					for(Long k : values.keySet()) {
+						Long newK = k + s.get(i);
+						bs = values.get(k);
+						BitSet bs1 = (BitSet)bs.clone();
+						bs1.set(i);
+						if(values.containsKey(newK)) {
+							continue;
 						}
-						Boolean[] returns = new Boolean[s.size()];
-						Arrays.fill(returns, Boolean.FALSE);
-						for(int j = 0; j < bs1.length(); j++) {
-							returns[j] = bs1.get(j);
+						valuesNew.put(newK, bs1);
+						valuesNew.put(k, bs);
+						if(newK==hSum) {
+							break start;
 						}
-						return Arrays.asList(returns);
 					}
+					values = valuesNew;
+					valuesNew = new HashMap<>(values);
 				}
-				values = valuesNew;
-				valuesNew = new HashMap<>();
 			}
+			bs = values.get(hSum);
+			if(bs==null || bs.cardinality()==0 || bs.cardinality()==s.size()) {
+				return Collections.emptyList();
+			}
+			Boolean[] returns = new Boolean[s.size()];
+			Arrays.fill(returns, Boolean.FALSE);
+			for(int j = 0; j < bs.length(); j++) {
+				returns[j] = bs.get(j);
+			}
+			return Arrays.asList(returns);
 		}
 		
 		return Collections.emptyList();
